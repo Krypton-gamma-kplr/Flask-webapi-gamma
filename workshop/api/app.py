@@ -67,11 +67,25 @@ def maj_data():
 
         return jsonify('Data updated successfully')
     else:
-        return 'Invalid request'
+        return jsonify('Invalid request')
+@app.route('/del_data_rq')    
+def del_rq_data():
+    return open('/workspaces/Flask-webapi-gamma/workshop/api/del.html').read()
 
+@app.route('/del_data', methods=['POST'])
+def del_data():
+    cur = conn.cursor()
+    id = request.form['id']
+    
+    if request.form['_method'] == 'PUT':
+        cur.execute("DELETE FROM data WHERE id = %s",id)
+        conn.commit()
+        cur.close()
 
-
-
-
+        return jsonify('Data deleted successfully')
+    else:
+        return jsonify('Invalid request')
+    
+    
 if __name__ == '__main__':
     app.run(debug=True)
