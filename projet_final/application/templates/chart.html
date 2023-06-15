@@ -1,0 +1,80 @@
+{% extends 'layout.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <h1>Dashboard</h1>
+    <h2>Income vs. Expense</h2>
+    <canvas id="income-vs-expense-chart"></canvas>
+    <h2>Category Comparison</h2>
+    <canvas id="category-comparison-chart"></canvas>
+    <h2>Expenses Over Time</h2>
+    <canvas id="expenses-over-time-chart"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var incomeVsExpenseData = {{ income_vs_expense|tojson }};
+        var incomeCategoryData = {{ income_category|tojson }};
+        var incomeCategoryLabels = {{ income_category_labels|tojson }};
+        var expensesOverTimeData = {{ over_time_expenditure|tojson }};
+        var datesLabels = {{ dates_labels|tojson }};
+
+        // Draw income vs. expense chart
+        var incomeVsExpenseChart = new Chart(document.getElementById("income-vs-expense-chart"), {
+            type: 'doughnut',
+            data: {
+                labels: ['Income', 'Expense'],
+                datasets: [{
+                    data: incomeVsExpenseData,
+                    backgroundColor: ['#36A2EB', '#FF6384']
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        // Draw category comparison chart
+        var categoryComparisonChart = new Chart(document.getElementById("category-comparison-chart"), {
+            type: 'bar',
+            data: {
+                labels: incomeCategoryLabels,
+                datasets: [{
+                    label: 'Amount',
+                    data: incomeCategoryData,
+                    backgroundColor: '#36A2EB'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Draw expenses over time chart
+        var expensesOverTimeChart = new Chart(document.getElementById("expenses-over-time-chart"), {
+            type: 'line',
+            data: {
+                labels: datesLabels,
+                datasets: [{
+                    label: 'Expenses',
+                    data: expensesOverTimeData,
+                    fill: false,
+                    borderColor: '#FF6384'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+{% endblock %}

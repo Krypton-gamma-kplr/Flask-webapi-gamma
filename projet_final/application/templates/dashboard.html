@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>Dashboard</h1>
+    <h2>Income vs Expense</h2>
+    <div id="income-vs-expense-chart"></div>
+    <h2>Category Comparison</h2>
+    <div id="category-comparison-chart"></div>
+    <h2>Over Time Expenditure</h2>
+    <div id="over-time-expenditure-chart"></div>
+
+    <script>
+        // Income vs Expense chart
+        var incomeVsExpenseData = {{ income_vs_expense|tojson }};
+        var incomeVsExpenseLabels = ['Income', 'Expense'];
+
+        var incomeVsExpenseChart = document.getElementById('income-vs-expense-chart');
+        Plotly.newPlot(incomeVsExpenseChart, [{
+            type: 'pie',
+            labels: incomeVsExpenseLabels,
+            values: incomeVsExpenseData.map(function(item) { return item[1]; })
+        }]);
+
+        // Category Comparison chart
+        var incomeCategoryData = {{ income_category|tojson }};
+        var incomeCategoryLabels = {{ income_category_labels|tojson }};
+
+        var categoryComparisonChart = document.getElementById('category-comparison-chart');
+        Plotly.newPlot(categoryComparisonChart, [{
+            type: 'bar',
+            x: incomeCategoryLabels,
+            y: incomeCategoryData
+        }]);
+
+        // Over Time Expenditure chart
+        var overTimeExpenditureData = {{ over_time_expenditure|tojson }};
+        var datesLabels = {{ dates_labels|tojson }};
+
+        var overTimeExpenditureChart = document.getElementById('over-time-expenditure-chart');
+        Plotly.newPlot(overTimeExpenditureChart, [{
+            type: 'scatter',
+            mode: 'lines',
+            x: datesLabels,
+            y: overTimeExpenditureData
+        }]);
+    </script>
+</body>
+</html>
